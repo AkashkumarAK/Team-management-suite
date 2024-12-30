@@ -8,7 +8,7 @@ const Team = require('../models/teammodel');
 const Member = require('../models/membermodel');
 const multer=require('multer')
 
-// Multer setup for file uploads
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads/');
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   });
   const upload = multer({ storage });
 
-  // 1. Register organizations
+ 
 // router.post('/organizations', async (req, res) => {
 //     try {
 //       const organization = await Organization.create(req.body);
@@ -34,13 +34,13 @@ router.post('/organizations', async (req, res) => {
     try {
       const { name, organizationId, location } = req.body;
   
-      // Validate organizationId if it's an ObjectId
+     
       
       console.log(organizationId);
   
       const organization = new Organization({
         name,
-        organizationId,  // Ensure this is a valid ObjectId or string
+        organizationId,  
         location
       });
   
@@ -53,7 +53,7 @@ router.post('/organizations', async (req, res) => {
   });
   
   
-  // 2. Add teams to an organization
+ 
   
 //       const { organizationId } = req.params;
 //       const organization = await Organization.findOne({organizationId:organizationId});
@@ -71,12 +71,12 @@ router.post('/organizations', async (req, res) => {
 
 //const { organizationId } = req.params;
     
-// Convert organizationId to ObjectId if necessary
+
 //const orgId = mongoose.Types.ObjectId.isValid(organizationId) ? mongoose.Types.ObjectId(organizationId) : null;
 
 
 
-// Now find the organization using the ObjectId
+
 // const { name, teamId  } = req.body;
 // console.log("Recieved data:"+name+"id:"+organizationId+"team id :"+teamId);
 
@@ -87,7 +87,7 @@ router.post('/organizations', async (req, res) => {
 //   return res.status(404).json({ error: 'Organization not found' });
 // }
 
-// // Create the team
+
 // const team = await Team.create({ ...req.body, organizationId});
 
 // res.status(201).json(team);
@@ -99,17 +99,17 @@ router.post('/organizations', async (req, res) => {
 
 router.post('/organizations/:organizationId/teams', async (req, res) => {
     try {
-        // Extract organizationId from URL params
+      
         const { organizationId } = req.params;
 
-        // Extract other data from request body
+        
         const { name, teamId } = req.body;
 
         console.log("Received data: name = " + name + ", organizationId = " + organizationId);
         console.log("OrganizationId from URL params: " + organizationId);
        
 
-        // Find the organization using the organizationId
+      
         const organization = await Organization.findOne({organizationId:organizationId});
         console.log("Found organization: ", organization);
 
@@ -117,7 +117,7 @@ router.post('/organizations/:organizationId/teams', async (req, res) => {
             return res.status(404).json({ error: 'Organization not found' });
         }
 
-        // Create the team
+      
         const team = await Team.create({ name, organizationId, teamId });
 
         res.status(201).json(team);
@@ -128,7 +128,7 @@ router.post('/organizations/:organizationId/teams', async (req, res) => {
 });
 
   
-  // 3. Add members to a team
+  
   router.post('/teams/:teamId/members', upload.single('image'),async (req, res) => {
      try {
     //   const { teamId } = req.params;
@@ -148,38 +148,39 @@ router.post('/organizations/:organizationId/teams', async (req, res) => {
     // }
 
     const { teamId } = req.params;
-    const { name, uniqueId } = req.body; // Get name and uniqueId from form data
+    const { name, uniqueId } = req.body; 
 
-    // If an image is uploaded, it will be in req.file
-    const image = req.file ? req.file.path : null; // Use the file path if an image is uploaded, else null
+    
+    const image = req.file ? req.file.path : null; 
 
-    // Log received data (including image if any)
+  
     console.log("Name:", name);
     console.log("Unique ID:", uniqueId);
     console.log("Team ID:", teamId);
     console.log("Image Path:", image);
 
-    // Find the team based on teamId
+    
     const team = await Team.findOne({ teamId });
     if (!team) {
       return res.status(404).json({ error: 'Team not found' });
     }
 
-    // Create the member object, including the optional image
+    
     const memberData = { name, uniqueId, teamId, image };
 
-    // Create a new member in the database
+  
     const member = await Member.create(memberData);
 
-    // Send the response
+   
     res.status(201).json(member);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to create member' });}
   
   });
-  
-  // 4. Upload image for a member
+
+
+
 //   router.post('/members/:memberId/image', upload.single('image'), async (req, res) => {
 //     try {
 //       const { memberId } = req.params;
@@ -194,7 +195,7 @@ router.post('/organizations/:organizationId/teams', async (req, res) => {
 //     }
 //   });
   
-  // 5. Fetch all members with hierarchy
+ 
   router.get('/hierarchy', async (req, res) => {
     try {
       const organizations = await Organization.find().lean();
